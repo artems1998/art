@@ -1,6 +1,5 @@
 #include<iostream>
 #include<fstream>
-#include<io.h>
 using namespace std;
 
 struct MyStruct
@@ -37,30 +36,35 @@ void screenout(char *fname){
 	in.close();
 };
 
+void obmen(char* fname, int n1, int n2) {
+	MyStruct aa, bb;
+	int l = sizeof aa;
+	std::ifstream fout(fname, std::ifstream::binary);
+	fout.seekg(l*(n2 - 1), ios::beg);
+	fout.read((char*)&aa, sizeof aa);
+	fout.seekg(l*(n1 - 1), ios::beg);
+	fout.read((char*)&bb, sizeof bb);
+	fout.close();
+	ofstream s;
+	s.open(fname, ios::in | ios::binary);
+	s.seekp(l*(n2 - 1), ios::beg);
+	s.write((char*)&bb, sizeof bb);
+	s.seekp(l*(n1 - 1), ios::beg);
+	s.write((char*)&aa, sizeof aa);
+	s.close();
+}
+
 
 int main(int argc, char *argv[]) {
 	setlocale(LC_ALL, "rus");
 	input_text(argv[1], argv[2]);
 	screenout(argv[2]);
+	int n1;
+    int n2;
+	cin >> n1 >> n2;
 	cout << "После преобразования" << endl;
-	/*MyStruct aa,bb,cc;
-	int n1 = 1;
-	int n2 = 2; 
-	std::ifstream fout(argv[2], std::ifstream::binary);
-	int l = sizeof aa;
-	fout.seekg(l*(n1-1) , ios::beg);
-	fout.read((char*)&aa, sizeof aa);
-	cc = aa;
-	fout.seekg(l*(n2 - 1), ios::beg);
-	fout.read((char*)&bb, sizeof bb);
-	aa = bb; 
-	fout.seekg(l*(n2 - 1), ios::beg);
-	fout.write((char*)&cc, sizeof cc);
-	fout.seekg(l*(n2 - 1), ios::beg);
-	fout.write((char*)&bb, sizeof bb);
-	fout.close();
-	fout.close();
-	screenout(argv[2]);*/
+	obmen(argv[2], n1, n2);
+	screenout(argv[2]);
 	system("pause");
 	return 0;
 }
